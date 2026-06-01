@@ -55,15 +55,11 @@
 
   </a-assets>
 
-  <a-camera
-    position="0 0 0"
-    look-controls="enabled: false">
-  </a-camera>
+  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
   <a-entity mindar-image-target="targetIndex: 0">
 
     <!-- Aircraft -->
-
     <a-gltf-model
       src="#aircraftModel"
       position="0 0 0"
@@ -72,7 +68,6 @@
     </a-gltf-model>
 
     <!-- Pilot -->
-
     <a-image
       id="pilot"
       class="clickable"
@@ -83,7 +78,6 @@
     </a-image>
 
     <!-- Title -->
-
     <a-text
       value="Tiger Moth Aircraft"
       position="0 1 0"
@@ -100,19 +94,10 @@
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  const target = document.querySelector("[mindar-image-target]");
-
-  target.addEventListener("targetFound", () => {
-    console.log("Target detected");
-  });
-
-  target.addEventListener("targetLost", () => {
-    console.log("Target lost");
-  });
-
   const pilot = document.querySelector("#pilot");
 
-  pilot.addEventListener("click", () => {
+  // 🔥 Use BOTH click + touch for mobile reliability
+  function speakPilot() {
 
     const speech = new SpeechSynthesisUtterance(
       "Welcome to the Air Force Museum. This Tiger Moth aircraft was used for basic pilot training and played an important role in developing future Air Force pilots."
@@ -122,7 +107,19 @@ document.addEventListener("DOMContentLoaded", () => {
     speech.pitch = 1;
 
     speechSynthesis.speak(speech);
+  }
 
+  pilot.addEventListener("click", speakPilot);
+  pilot.addEventListener("touchstart", speakPilot);
+
+  const target = document.querySelector("[mindar-image-target]");
+
+  target.addEventListener("targetFound", () => {
+    console.log("Target detected");
+  });
+
+  target.addEventListener("targetLost", () => {
+    console.log("Target lost");
   });
 
 });
