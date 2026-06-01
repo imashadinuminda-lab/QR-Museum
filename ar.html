@@ -4,17 +4,13 @@
   <meta charset="utf-8">
   <title>Smart Museum AR</title>
 
-  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-
-  <!-- MindAR -->
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
     body {
       margin: 0;
       overflow: hidden;
-      font-family: Arial, sans-serif;
     }
 
     #info {
@@ -26,6 +22,7 @@
       color: white;
       padding: 10px;
       border-radius: 8px;
+      font-family: Arial;
     }
   </style>
 </head>
@@ -33,7 +30,7 @@
 <body>
 
 <div id="info">
-  Point your camera at the exhibit image.
+  Point camera at exhibit image
 </div>
 
 <a-scene
@@ -41,40 +38,54 @@
   color-space="sRGB"
   renderer="colorManagement: true;"
   vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: true">
+  device-orientation-permission-ui="enabled: true"
+  cursor="rayOrigin: mouse"
+  raycaster="objects: .clickable">
 
-  <!-- Assets -->
   <a-assets>
+
     <a-asset-item
       id="aircraftModel"
       src="models/tiger_moth.glb">
     </a-asset-item>
+
+    <img
+      id="pilotImage"
+      src="assets/images/pilot.png">
+
   </a-assets>
 
-  <!-- Camera -->
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false">
+  </a-camera>
 
-  <!-- Image Target -->
   <a-entity mindar-image-target="targetIndex: 0">
 
-    <!-- Aircraft Model -->
+    <!-- Aircraft -->
+
     <a-gltf-model
       src="#aircraftModel"
       position="0 0 0"
-      rotation="0 0 0"
+      rotation="0 180 0"
       scale="0.3 0.3 0.3">
     </a-gltf-model>
 
-    <!-- Virtual Guide -->
-    <a-sphere
-      position="1 0 0"
-      radius="0.2"
-      color="blue">
-    </a-sphere>
+    <!-- Pilot -->
+
+    <a-image
+      id="pilot"
+      class="clickable"
+      src="#pilotImage"
+      position="0.9 0 0"
+      width="0.5"
+      height="0.8">
+    </a-image>
 
     <!-- Title -->
+
     <a-text
-      value="Tiger Moth"
+      value="Tiger Moth Aircraft"
       position="0 1 0"
       align="center"
       color="white"
@@ -86,6 +97,7 @@
 </a-scene>
 
 <script>
+
 document.addEventListener("DOMContentLoaded", () => {
 
   const target = document.querySelector("[mindar-image-target]");
@@ -98,7 +110,23 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Target lost");
   });
 
+  const pilot = document.querySelector("#pilot");
+
+  pilot.addEventListener("click", () => {
+
+    const speech = new SpeechSynthesisUtterance(
+      "Welcome to the Air Force Museum. This Tiger Moth aircraft was used for basic pilot training and played an important role in developing future Air Force pilots."
+    );
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    speechSynthesis.speak(speech);
+
+  });
+
 });
+
 </script>
 
 </body>
