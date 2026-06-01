@@ -24,6 +24,7 @@
             border-radius:10px;
             box-shadow:0 0 10px rgba(0,0,0,0.3);
             margin-top:20px;
+            background:#ddd;
         }
 
         button{
@@ -72,12 +73,14 @@
 
 <script>
 
-let exhibitData;
+let exhibitData = null;
 let images = [];
 let currentImage = 0;
+let slideInterval = null;
 
 const id = new URLSearchParams(window.location.search).get("id");
 
+// Load data
 fetch("exhibits.json")
 .then(response => response.json())
 .then(data => {
@@ -92,14 +95,27 @@ fetch("exhibits.json")
     document.getElementById("title").innerText = exhibitData.name;
     document.getElementById("desc").innerText = exhibitData.description;
 
+    // CHECK images exist
+    if (!exhibitData.images || exhibitData.images.length === 0) {
+        console.log("No images found for:", id);
+        return;
+    }
+
     images = exhibitData.images;
 
-    document.getElementById("slideshow").src = images[0];
+    // Show first image
+    const img = document.getElementById("slideshow");
+    img.src = images[0];
 
-    setInterval(changeImage,3000);
+    // Start slideshow safely
+    slideInterval = setInterval(changeImage, 3000);
+
 });
 
+// Slideshow function
 function changeImage(){
+
+    if(images.length === 0) return;
 
     currentImage++;
 
@@ -110,7 +126,10 @@ function changeImage(){
     document.getElementById("slideshow").src = images[currentImage];
 }
 
+// Voice
 function playVoice(){
+
+    if(!exhibitData) return;
 
     let speech = new SpeechSynthesisUtterance(exhibitData.voice);
 
@@ -120,11 +139,16 @@ function playVoice(){
     speechSynthesis.speak(speech);
 }
 
+// AR navigation
 function openAR(){
 
-    window.location.href =
-    "ar.html?id=" + id;
+    window.location.href = "ar.html?id=" + id;
 }
+
+// DEBUG (very important)
+document.getElementById("slideshow").onerror = function(){
+    console.log("❌ Image failed to load:", this.src);
+};
 
 </script>
 
