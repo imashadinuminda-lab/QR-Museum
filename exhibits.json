@@ -1,0 +1,31 @@
+{
+  "aircraft_001": {
+    "name": "Tiger Moth",
+    "description": "Training aircraft used for pilot training.",
+    "voice": "This Tiger Moth was used to train pilots."
+  },
+
+  "aircraft_002": {
+    "name": "Jet Trainer",
+    "description": "Advanced jet training aircraft.",
+    "voice": "This jet trainer was used for advanced pilot training."
+  },
+
+  "aircraft_003": {
+    "name": "Bell Helicopter",
+    "description": "Utility helicopter used for transport.",
+    "voice": "This helicopter was used for transport missions."
+  },
+
+  "aircraft_004": {
+    "name": "Fighter Jet",
+    "description": "Supersonic fighter aircraft.",
+    "voice": "This fighter jet was used for combat missions."
+  },
+
+  "aircraft_005": {
+    "name": "Transport Aircraft",
+    "description": "Large cargo transport aircraft.",
+    "voice": "This aircraft was used to transport supplies and equipment."
+  }
+}
