@@ -1,58 +1,70 @@
 <!DOCTYPE html>
+
 <html>
 <head>
     <title>Smart Museum Exhibit</title>
 
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            text-align:center;
-            background:#f4f4f4;
-            margin:0;
-            padding:20px;
-        }
+```
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        text-align:center;
+        background:#f4f4f4;
+        margin:0;
+        padding:20px;
+    }
 
-        h1{
-            color:#003366;
-        }
+    h1{
+        color:#003366;
+    }
 
-        #slideshow{
-            width:80%;
-            max-width:700px;
-            height:400px;
-            object-fit:cover;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.3);
-            margin-top:20px;
-            background:#ddd;
-        }
+    #slideshow{
+        width:80%;
+        max-width:700px;
+        height:400px;
+        object-fit:cover;
+        border-radius:10px;
+        box-shadow:0 0 10px rgba(0,0,0,0.3);
+        margin-top:20px;
+        background:#ddd;
+        transition: opacity 0.5s ease-in-out;
+    }
 
-        button{
-            padding:12px 20px;
-            margin:10px;
-            font-size:16px;
-            cursor:pointer;
-            border:none;
-            border-radius:5px;
-        }
+    #caption{
+        margin-top:10px;
+        font-size:16px;
+        color:#555;
+        font-style:italic;
+    }
 
-        .voice-btn{
-            background:#28a745;
-            color:white;
-        }
+    button{
+        padding:12px 20px;
+        margin:10px;
+        font-size:16px;
+        cursor:pointer;
+        border:none;
+        border-radius:5px;
+    }
 
-        .ar-btn{
-            background:#007bff;
-            color:white;
-        }
+    .voice-btn{
+        background:#28a745;
+        color:white;
+    }
 
-        #desc{
-            width:80%;
-            margin:auto;
-            margin-top:20px;
-            font-size:18px;
-        }
-    </style>
+    .ar-btn{
+        background:#007bff;
+        color:white;
+    }
+
+    #desc{
+        width:80%;
+        margin:auto;
+        margin-top:20px;
+        font-size:18px;
+    }
+</style>
+```
+
 </head>
 
 <body>
@@ -60,6 +72,8 @@
 <h1 id="title">Loading...</h1>
 
 <img id="slideshow" src="" alt="Exhibit Image">
+
+<p id="caption"></p>
 
 <p id="desc"></p>
 
@@ -76,11 +90,9 @@
 let exhibitData = null;
 let images = [];
 let currentImage = 0;
-let slideInterval = null;
 
 const id = new URLSearchParams(window.location.search).get("id");
 
-// Load data
 fetch("exhibits.json")
 .then(response => response.json())
 .then(data => {
@@ -95,38 +107,50 @@ fetch("exhibits.json")
     document.getElementById("title").innerText = exhibitData.name;
     document.getElementById("desc").innerText = exhibitData.description;
 
-    // CHECK images exist
-    if (!exhibitData.images || exhibitData.images.length === 0) {
-        console.log("No images found for:", id);
+    if(!exhibitData.images || exhibitData.images.length === 0){
+        console.log("No images found");
         return;
     }
 
     images = exhibitData.images;
 
-    // Show first image
-    const img = document.getElementById("slideshow");
-    img.src = images[0];
+    document.getElementById("slideshow").src = images[0];
 
-    // Start slideshow safely
-    slideInterval = setInterval(changeImage, 3000);
+    document.getElementById("caption").innerText =
+        "Photo 1 of " + images.length;
+
+    setInterval(changeImage, 3000);
 
 });
 
-// Slideshow function
 function changeImage(){
 
     if(images.length === 0) return;
 
-    currentImage++;
+    const img = document.getElementById("slideshow");
 
-    if(currentImage >= images.length){
-        currentImage = 0;
-    }
+    img.style.opacity = 0;
 
-    document.getElementById("slideshow").src = images[currentImage];
+    setTimeout(() => {
+
+        currentImage++;
+
+        if(currentImage >= images.length){
+            currentImage = 0;
+        }
+
+        img.src = images[currentImage];
+
+        document.getElementById("caption").innerText =
+            "Photo " + (currentImage + 1) +
+            " of " + images.length;
+
+        img.style.opacity = 1;
+
+    }, 300);
+
 }
 
-// Voice
 function playVoice(){
 
     if(!exhibitData) return;
@@ -137,17 +161,19 @@ function playVoice(){
     speech.pitch = 1;
 
     speechSynthesis.speak(speech);
+
 }
 
-// AR navigation
 function openAR(){
 
     window.location.href = "ar.html?id=" + id;
+
 }
 
-// DEBUG (very important)
 document.getElementById("slideshow").onerror = function(){
-    console.log("❌ Image failed to load:", this.src);
+
+    console.log("Image failed to load:", this.src);
+
 };
 
 </script>
