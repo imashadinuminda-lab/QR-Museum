@@ -2,30 +2,55 @@
   "aircraft_001": {
     "name": "Tiger Moth",
     "description": "Training aircraft used for pilot training.",
-    "voice": "This Tiger Moth was used to train pilots."
+    "voice": "This Tiger Moth was used to train pilots.",
+    "images": [
+      "assets/images/tiger1.jpg",
+      "assets/images/tiger2.jpg",
+      "assets/images/tiger3.jpg"
+    ]
   },
 
   "aircraft_002": {
     "name": "Jet Trainer",
     "description": "Advanced jet training aircraft.",
-    "voice": "This jet trainer was used for advanced pilot training."
+    "voice": "This jet trainer was used for advanced pilot training.",
+    "images": [
+      "assets/images/jet1.jpg",
+      "assets/images/jet2.jpg",
+      "assets/images/jet3.jpg"
+    ]
   },
 
   "aircraft_003": {
     "name": "Bell Helicopter",
     "description": "Utility helicopter used for transport.",
-    "voice": "This helicopter was used for transport missions."
+    "voice": "This helicopter was used for transport missions.",
+    "images": [
+      "assets/images/heli1.jpg",
+      "assets/images/heli2.jpg",
+      "assets/images/heli3.jpg"
+    ]
   },
 
   "aircraft_004": {
     "name": "Fighter Jet",
     "description": "Supersonic fighter aircraft.",
-    "voice": "This fighter jet was used in combat missions."
+    "voice": "This fighter jet was used in combat missions.",
+    "images": [
+      "assets/images/fighter1.jpg",
+      "assets/images/fighter2.jpg",
+      "assets/images/fighter3.jpg"
+    ]
   },
 
   "aircraft_005": {
     "name": "Transport Aircraft",
     "description": "Large cargo aircraft for logistics.",
-    "voice": "This aircraft was used to transport supplies."
+    "voice": "This aircraft was used to transport supplies.",
+    "images": [
+      "assets/images/transport1.jpg",
+      "assets/images/transport2.jpg",
+      "assets/images/transport3.jpg"
+    ]
   }
 }
