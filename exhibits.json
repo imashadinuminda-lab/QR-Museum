@@ -20,12 +20,12 @@
   "aircraft_004": {
     "name": "Fighter Jet",
     "description": "Supersonic fighter aircraft.",
-    "voice": "This fighter jet was used for combat missions."
+    "voice": "This fighter jet was used in combat missions."
   },
 
   "aircraft_005": {
     "name": "Transport Aircraft",
-    "description": "Large cargo transport aircraft.",
-    "voice": "This aircraft was used to transport supplies and equipment."
+    "description": "Large cargo aircraft for logistics.",
+    "voice": "This aircraft was used to transport supplies."
   }
 }
