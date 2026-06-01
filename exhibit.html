@@ -10,13 +10,12 @@
 <p id="desc"></p>
 
 <button onclick="playVoice()">Play Voice</button>
+<button onclick="openAR()">View AR</button>
 
 <script>
 
-// STEP 1: Get ID from URL
 const id = new URLSearchParams(window.location.search).get("id");
 
-// STEP 2: Load database
 fetch("exhibits.json")
 .then(res => res.json())
 .then(data => {
@@ -38,6 +37,11 @@ function playVoice() {
     let speech = new SpeechSynthesisUtterance(window.voiceText);
     speech.rate = 0.9;
     speechSynthesis.speak(speech);
+}
+
+function openAR() {
+    const id = new URLSearchParams(window.location.search).get("id");
+    window.location.href = "ar.html?id=" + id;
 }
 
 </script>
