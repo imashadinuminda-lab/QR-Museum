@@ -1,47 +1,129 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Exhibit</title>
+    <title>Smart Museum Exhibit</title>
+
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            text-align:center;
+            background:#f4f4f4;
+            margin:0;
+            padding:20px;
+        }
+
+        h1{
+            color:#003366;
+        }
+
+        #slideshow{
+            width:80%;
+            max-width:700px;
+            height:400px;
+            object-fit:cover;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.3);
+            margin-top:20px;
+        }
+
+        button{
+            padding:12px 20px;
+            margin:10px;
+            font-size:16px;
+            cursor:pointer;
+            border:none;
+            border-radius:5px;
+        }
+
+        .voice-btn{
+            background:#28a745;
+            color:white;
+        }
+
+        .ar-btn{
+            background:#007bff;
+            color:white;
+        }
+
+        #desc{
+            width:80%;
+            margin:auto;
+            margin-top:20px;
+            font-size:18px;
+        }
+    </style>
 </head>
 
 <body>
 
 <h1 id="title">Loading...</h1>
+
+<img id="slideshow" src="" alt="Exhibit Image">
+
 <p id="desc"></p>
 
-<button onclick="playVoice()">Play Voice</button>
-<button onclick="openAR()">View AR</button>
+<button class="voice-btn" onclick="playVoice()">
+🔊 Play Voice Guide
+</button>
+
+<button class="ar-btn" onclick="openAR()">
+📱 View AR
+</button>
 
 <script>
+
+let exhibitData;
+let images = [];
+let currentImage = 0;
 
 const id = new URLSearchParams(window.location.search).get("id");
 
 fetch("exhibits.json")
-.then(res => res.json())
+.then(response => response.json())
 .then(data => {
 
-    const ex = data[id];
+    exhibitData = data[id];
 
-    if (!ex) {
+    if(!exhibitData){
         document.body.innerHTML = "<h1>Exhibit Not Found</h1>";
         return;
     }
 
-    document.getElementById("title").innerText = ex.name;
-    document.getElementById("desc").innerText = ex.description;
+    document.getElementById("title").innerText = exhibitData.name;
+    document.getElementById("desc").innerText = exhibitData.description;
 
-    window.voiceText = ex.voice;
+    images = exhibitData.images;
+
+    document.getElementById("slideshow").src = images[0];
+
+    setInterval(changeImage,3000);
 });
 
-function playVoice() {
-    let speech = new SpeechSynthesisUtterance(window.voiceText);
+function changeImage(){
+
+    currentImage++;
+
+    if(currentImage >= images.length){
+        currentImage = 0;
+    }
+
+    document.getElementById("slideshow").src = images[currentImage];
+}
+
+function playVoice(){
+
+    let speech = new SpeechSynthesisUtterance(exhibitData.voice);
+
     speech.rate = 0.9;
+    speech.pitch = 1;
+
     speechSynthesis.speak(speech);
 }
 
-function openAR() {
-    const id = new URLSearchParams(window.location.search).get("id");
-    window.location.href = "ar.html?id=" + id;
+function openAR(){
+
+    window.location.href =
+    "ar.html?id=" + id;
 }
 
 </script>
