@@ -36,11 +36,18 @@
 <a-scene
   mindar-image="imageTargetSrc: targets.mind;"
   color-space="sRGB"
-  renderer="colorManagement: true;"
+  renderer="colorManagement: true; shadow: true"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: true"
   cursor="rayOrigin: mouse"
   raycaster="objects: .clickable">
+
+  <!-- LIGHTS -->
+  <a-entity light="type: ambient; intensity: 0.6"></a-entity>
+
+  <a-entity light="type: directional; intensity: 1"
+            position="1 2 1"
+            shadow="cast: true"></a-entity>
 
   <a-assets>
 
@@ -59,32 +66,56 @@
 
   <a-entity mindar-image-target="targetIndex: 0">
 
-    <!-- Aircraft -->
+    <!-- GROUND (SHADOW RECEIVER) -->
+    <a-plane
+      position="0 -0.6 0"
+      rotation="-90 0 0"
+      width="5"
+      height="5"
+      color="#444"
+      shadow="receive: true">
+    </a-plane>
+
+    <!-- AIRCRAFT -->
     <a-gltf-model
       src="#aircraftModel"
       position="0 0 0"
       rotation="0 180 0"
-      scale="0.6 0.6 0.6">
+      scale="0.6 0.6 0.6"
+      shadow="cast: true; receive: true">
     </a-gltf-model>
 
-    <!-- Pilot -->
+    <!-- PILOT -->
     <a-image
       id="pilot"
       class="clickable"
       src="#pilotImage"
       position="0.9 0 0"
       width="0.5"
-      height="0.8">
+      height="0.8"
+      shadow="cast: true">
     </a-image>
 
-    <!-- Title -->
-    <a-text
-      value="Tiger Moth Aircraft"
-      position="0 1 0"
-      align="center"
-      color="white"
-      width="4">
-    </a-text>
+    <!-- 3D STYLE TITLE -->
+    <a-entity position="0 1 0">
+
+      <a-text
+        value="Tiger Moth"
+        align="center"
+        color="#ffffff"
+        width="4"
+        shader="msdf">
+      </a-text>
+
+      <a-text
+        value="Tiger Moth"
+        align="center"
+        color="#222222"
+        width="4"
+        position="0 0 -0.02">
+      </a-text>
+
+    </a-entity>
 
   </a-entity>
 
@@ -96,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pilot = document.querySelector("#pilot");
 
-  // 🔥 Use BOTH click + touch for mobile reliability
   function speakPilot() {
 
     const speech = new SpeechSynthesisUtterance(
@@ -111,16 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   pilot.addEventListener("click", speakPilot);
   pilot.addEventListener("touchstart", speakPilot);
-
-  const target = document.querySelector("[mindar-image-target]");
-
-  target.addEventListener("targetFound", () => {
-    console.log("Target detected");
-  });
-
-  target.addEventListener("targetLost", () => {
-    console.log("Target lost");
-  });
 
 });
 
