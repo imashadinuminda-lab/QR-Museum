@@ -34,7 +34,7 @@
 </div>
 
 <!-- 🔊 AUDIO FILE -->
-<audio id="museumAudio" src="assets/audio/tiger_moth.mp3"></audio>
+<audio id="museumAudio" src="assets/audio/tiger_moth.mp3" preload="auto"></audio>
 
 <a-scene
   mindar-image="imageTargetSrc: targets.mind;"
@@ -75,7 +75,7 @@
       shadow="cast: true">
     </a-gltf-model>
 
-    <!-- PILOT (2D IMAGE for now) -->
+    <!-- PILOT -->
     <a-image
       id="pilot"
       src="#pilotImage"
@@ -99,7 +99,7 @@
       id="audioBtn3D"
       class="clickable"
       position="-0.9 0 0"
-      radius="0.15"
+      radius="0.2"
       height="0.05"
       color="#007bff"
       shadow="cast: true">
@@ -124,37 +124,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const audio = document.getElementById("museumAudio");
   const btn = document.querySelector("#audioBtn3D");
 
-  // 🔊 AUDIO BUTTON
+  let isPlaying = false;
+
+  // 🔓 FIX: unlock audio for mobile browsers
+  function unlockAudio() {
+    audio.play().then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+    }).catch(() => {});
+  }
+
+  window.addEventListener("click", unlockAudio, { once: true });
+  window.addEventListener("touchstart", unlockAudio, { once: true });
+
+  // 🎧 Toggle audio
   function toggleAudio() {
 
-    if (audio.paused) {
+    if (!isPlaying) {
       audio.play();
-      btn.setAttribute("color", "#00cc66"); // green when playing
+      isPlaying = true;
+      btn.setAttribute("color", "#00cc66");
     } else {
       audio.pause();
-      btn.setAttribute("color", "#007bff"); // blue when stopped
+      isPlaying = false;
+      btn.setAttribute("color", "#007bff");
     }
+
   }
 
+  // 🟢 Reliable events
   btn.addEventListener("click", toggleAudio);
   btn.addEventListener("touchstart", toggleAudio);
-
-  // 👨‍✈️ PILOT SPEECH
-  const pilot = document.querySelector("#pilot");
-
-  function speakPilot() {
-    const speech = new SpeechSynthesisUtterance(
-      "Welcome to the Air Force Museum. This Tiger Moth aircraft was used for pilot training."
-    );
-
-    speech.rate = 0.9;
-    speech.pitch = 1;
-
-    speechSynthesis.speak(speech);
-  }
-
-  pilot.addEventListener("click", speakPilot);
-  pilot.addEventListener("touchstart", speakPilot);
 
 });
 </script>
