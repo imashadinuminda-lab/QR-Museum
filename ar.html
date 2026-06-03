@@ -33,20 +33,21 @@
   Point camera at exhibit image
 </div>
 
-<!-- 🔊 AUDIO FILE -->
-<audio id="museumAudio" src="assets/audio/tiger_moth.mp3" preload="auto"></audio>
-
 <a-scene
   mindar-image="imageTargetSrc: targets.mind;"
-  renderer="colorManagement: true; physicallyCorrectLights: true"
+  color-space="sRGB"
+  renderer="colorManagement: true; shadow: true"
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: true"
   cursor="rayOrigin: mouse"
   raycaster="objects: .clickable">
 
-  <!-- LIGHTING -->
-  <a-entity light="type: ambient; intensity: 0.7"></a-entity>
-  <a-entity light="type: directional; intensity: 1.2" position="2 3 1"></a-entity>
+  <!-- LIGHTS -->
+  <a-entity light="type: ambient; intensity: 0.6"></a-entity>
+
+  <a-entity light="type: directional; intensity: 1"
+            position="1 2 1"
+            shadow="cast: true"></a-entity>
 
   <a-assets>
 
@@ -63,8 +64,17 @@
 
   <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <!-- ================= AR TARGET ================= -->
   <a-entity mindar-image-target="targetIndex: 0">
+
+    <!-- GROUND (SHADOW RECEIVER) -->
+    <a-plane
+      position="0 -0.6 0"
+      rotation="-90 0 0"
+      width="5"
+      height="5"
+      color="#444"
+      shadow="receive: true">
+    </a-plane>
 
     <!-- AIRCRAFT -->
     <a-gltf-model
@@ -72,91 +82,68 @@
       position="0 0 0"
       rotation="0 180 0"
       scale="0.6 0.6 0.6"
-      shadow="cast: true">
+      shadow="cast: true; receive: true">
     </a-gltf-model>
 
     <!-- PILOT -->
     <a-image
       id="pilot"
+      class="clickable"
       src="#pilotImage"
       position="0.9 0 0"
       width="0.5"
       height="0.8"
-      class="clickable">
+      shadow="cast: true">
     </a-image>
 
-    <!-- TITLE -->
-    <a-text
-      value="Tiger Moth"
-      position="0 1 0"
-      align="center"
-      color="white"
-      width="4">
-    </a-text>
+    <!-- 3D STYLE TITLE -->
+    <a-entity position="0 1 0">
 
-    <!-- ================= 3D AUDIO BUTTON ================= -->
-    <a-cylinder
-      id="audioBtn3D"
-      class="clickable"
-      position="-0.9 0 0"
-      radius="0.2"
-      height="0.05"
-      color="#007bff"
-      shadow="cast: true">
-    </a-cylinder>
+      <a-text
+        value="Tiger Moth"
+        align="center"
+        color="#ffffff"
+        width="4"
+        shader="msdf">
+      </a-text>
 
-    <a-text
-      value="PLAY AUDIO"
-      position="-0.9 0.15 0"
-      align="center"
-      color="white"
-      width="2">
-    </a-text>
+      <a-text
+        value="Tiger Moth"
+        align="center"
+        color="#222222"
+        width="4"
+        position="0 0 -0.02">
+      </a-text>
+
+    </a-entity>
 
   </a-entity>
 
 </a-scene>
 
-<!-- ================= SCRIPT ================= -->
 <script>
+
 document.addEventListener("DOMContentLoaded", () => {
 
-  const audio = document.getElementById("museumAudio");
-  const btn = document.querySelector("#audioBtn3D");
+  const pilot = document.querySelector("#pilot");
 
-  let isPlaying = false;
+  function speakPilot() {
 
-  // 🔓 FIX: unlock audio for mobile browsers
-  function unlockAudio() {
-    audio.play().then(() => {
-      audio.pause();
-      audio.currentTime = 0;
-    }).catch(() => {});
+    const speech = new SpeechSynthesisUtterance(
+      "Welcome to the Air Force Museum. This Tiger Moth aircraft was used for basic pilot training and played an important role in developing future Air Force pilots."
+    );
+
+    speech.rate = 0.9;
+    speech.pitch = 1;
+
+    speechSynthesis.speak(speech);
   }
 
-  window.addEventListener("click", unlockAudio, { once: true });
-  window.addEventListener("touchstart", unlockAudio, { once: true });
-
-  // 🎧 Toggle audio
-  function toggleAudio() {
-
-    if (!isPlaying) {
-      audio.play();
-      isPlaying = true;
-      btn.setAttribute("color", "#00cc66");
-    } else {
-      audio.pause();
-      isPlaying = false;
-      btn.setAttribute("color", "#007bff");
-    }
-
-  }
-
-  // 🟢 Reliable events
-  btn.addEventListener("click", toggleAudio);
-  btn.addEventListener("touchstart", toggleAudio);
+  pilot.addEventListener("click", speakPilot);
+  pilot.addEventListener("touchstart", speakPilot);
 
 });
+
 </script>
 
 </body>
