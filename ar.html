@@ -8,155 +8,112 @@
   <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
 
   <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-    }
-
+    body { margin:0; overflow:hidden; }
     #info {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      z-index: 999;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 10px;
-      border-radius: 8px;
-      font-family: Arial;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.6);
+      color:white;
+      padding:10px;
+      border-radius:8px;
     }
   </style>
 </head>
 
 <body>
 
-<div id="info">
-  Point camera at exhibit image
-</div>
+<div id="info">Smart Museum AR</div>
 
-<!-- 🔊 AUDIO FILE -->
-<audio id="museumAudio" src="assets/audio/tiger_moth.mp3" preload="auto"></audio>
+<audio id="audio"></audio>
 
 <a-scene
   mindar-image="imageTargetSrc: targets.mind;"
   renderer="colorManagement: true; physicallyCorrectLights: true"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: true"
-  cursor="rayOrigin: mouse"
-  raycaster="objects: .clickable">
+  vr-mode-ui="enabled:false">
 
-  <!-- LIGHTING -->
-  <a-entity light="type: ambient; intensity: 0.7"></a-entity>
-  <a-entity light="type: directional; intensity: 1.2" position="2 3 1"></a-entity>
+  <a-entity light="type:ambient; intensity:0.7"></a-entity>
+  <a-entity light="type:directional; intensity:1.2" position="2 3 1"></a-entity>
 
   <a-assets>
-
-    <a-asset-item
-      id="aircraftModel"
-      src="models/tiger_moth.glb">
-    </a-asset-item>
-
-    <img
-      id="pilotImage"
-      src="assets/images/pilot.png">
-
+    <a-asset-item id="aircraft" src="models/tiger_moth.glb"></a-asset-item>
+    <a-asset-item id="pilotModel" src="models/pilot.glb"></a-asset-item>
   </a-assets>
 
-  <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+  <a-camera></a-camera>
 
-  <!-- ================= AR TARGET ================= -->
   <a-entity mindar-image-target="targetIndex: 0">
 
-    <!-- AIRCRAFT -->
+    <!-- Aircraft -->
+    <a-gltf-model src="#aircraft" scale="0.6 0.6 0.6"></a-gltf-model>
+
+    <!-- Pilot -->
     <a-gltf-model
-      src="#aircraftModel"
-      position="0 0 0"
-      rotation="0 180 0"
-      scale="0.6 0.6 0.6"
-      shadow="cast: true">
+      id="pilot"
+      src="#pilotModel"
+      scale="0.35 0.35 0.35"
+      position="1 0 0">
     </a-gltf-model>
 
-    <!-- PILOT -->
-    <a-image
-      id="pilot"
-      src="#pilotImage"
-      position="0.9 0 0"
-      width="0.5"
-      height="0.8"
-      class="clickable">
-    </a-image>
-
-    <!-- TITLE -->
-    <a-text
-      value="Tiger Moth"
-      position="0 1 0"
-      align="center"
-      color="white"
-      width="4">
-    </a-text>
-
-    <!-- ================= 3D AUDIO BUTTON ================= -->
-    <a-cylinder
-      id="audioBtn3D"
-      class="clickable"
-      position="-0.9 0 0"
-      radius="0.2"
-      height="0.05"
-      color="#007bff"
-      shadow="cast: true">
+    <!-- AUDIO BUTTON -->
+    <a-cylinder id="btn" class="clickable"
+      position="-1 0 0"
+      radius="0.15"
+      color="#007bff">
     </a-cylinder>
 
-    <a-text
-      value="PLAY AUDIO"
-      position="-0.9 0.15 0"
-      align="center"
-      color="white"
-      width="2">
-    </a-text>
+    <a-text value="PLAY" position="-1 0.2 0" align="center"></a-text>
 
   </a-entity>
 
 </a-scene>
 
-<!-- ================= SCRIPT ================= -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+const id = new URLSearchParams(location.search).get("id");
+const audio = document.getElementById("audio");
+const btn = document.querySelector("#btn");
+const pilot = document.querySelector("#pilot");
 
-  const audio = document.getElementById("museumAudio");
-  const btn = document.querySelector("#audioBtn3D");
+let data;
 
-  let isPlaying = false;
+fetch("exhibits.json")
+.then(r => r.json())
+.then(d => {
 
-  // 🔓 FIX: unlock audio for mobile browsers
-  function unlockAudio() {
-    audio.play().then(() => {
-      audio.pause();
-      audio.currentTime = 0;
-    }).catch(() => {});
-  }
-
-  window.addEventListener("click", unlockAudio, { once: true });
-  window.addEventListener("touchstart", unlockAudio, { once: true });
-
-  // 🎧 Toggle audio
-  function toggleAudio() {
-
-    if (!isPlaying) {
-      audio.play();
-      isPlaying = true;
-      btn.setAttribute("color", "#00cc66");
-    } else {
-      audio.pause();
-      isPlaying = false;
-      btn.setAttribute("color", "#007bff");
-    }
-
-  }
-
-  // 🟢 Reliable events
-  btn.addEventListener("click", toggleAudio);
-  btn.addEventListener("touchstart", toggleAudio);
+  data = d[id];
+  audio.src = data.audio;
 
 });
+
+btn.addEventListener("click", () => {
+  audio.play();
+});
+
+btn.addEventListener("touchstart", () => {
+  audio.play();
+});
+
+/* WALKING PILOT */
+const path = [
+  {x:1,z:0},{x:0,z:1},{x:-1,z:0},{x:0,z:-1}
+];
+
+let i = 0;
+
+setInterval(() => {
+
+  const p = path[i];
+
+  pilot.setAttribute("animation", {
+    property:"position",
+    to:`${p.x} 0 ${p.z}`,
+    dur:2500,
+    easing:"linear"
+  });
+
+  i = (i+1)%path.length;
+
+}, 2600);
+
 </script>
 
 </body>
