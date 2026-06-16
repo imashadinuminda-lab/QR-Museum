@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Boulton Paul Balliol T. Mk.2</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header>
+<h1>Boulton Paul Balliol T. Mk.2</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<img src="../images/balliol.jpg">
+
+<h2>Aircraft History</h2>
+
+<p>
+The Boulton Paul Balliol T. Mk.2 was a British advanced trainer aircraft
+developed after World War II. It was used to train military pilots.
+</p>
+
+<h2>Specifications</h2>
+
+<table>
+
+<tr>
+<th>Manufacturer</th>
+<td>Boulton Paul</td>
+</tr>
+
+<tr>
+<th>Country</th>
+<td>United Kingdom</td>
+</tr>
+
+<tr>
+<th>Crew</th>
+<td>2</td>
+</tr>
+
+<tr>
+<th>Role</th>
+<td>Advanced Trainer</td>
+</tr>
+
+</table>
+
+<h2>Select Audio Language</h2>
+
+<button onclick="playAudio('en')">English</button>
+
+<button onclick="playAudio('si')">
+සිංහල
+</button>
+
+<button onclick="playAudio('ta')">
+தமிழ்
+</button>
+
+<audio id="en" src="../audio/balliol-en.mp3"></audio>
+<audio id="si" src="../audio/balliol-si.mp3"></audio>
+<audio id="ta" src="../audio/balliol-ta.mp3"></audio>
+
+</div>
+
+</div>
+
+<script>
+
+function playAudio(language){
+
+document.getElementById("en").pause();
+document.getElementById("si").pause();
+document.getElementById("ta").pause();
+
+document.getElementById(language).currentTime=0;
+document.getElementById(language).play();
+
+}
+
+</script>
+
+</body>
+</html>
