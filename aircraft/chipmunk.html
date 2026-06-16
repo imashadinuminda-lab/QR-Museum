@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>De Havilland Chipmunk T. Mk.10</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header>
+<h1>De Havilland Chipmunk T. Mk.10</h1>
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<img src="../images/chipmunk.jpg">
+
+<h2>Aircraft History</h2>
+
+<p>
+The De Havilland Chipmunk T. Mk.10 is a two-seat training aircraft
+designed in the United Kingdom. It was used for primary flight training
+and became one of the most successful trainer aircraft in aviation history.
+</p>
+
+<h2>Specifications</h2>
+
+<table>
+<tr>
+<th>Manufacturer</th>
+<td>De Havilland</td>
+</tr>
+
+<tr>
+<th>Country</th>
+<td>United Kingdom</td>
+</tr>
+
+<tr>
+<th>Crew</th>
+<td>2</td>
+</tr>
+
+<tr>
+<th>Role</th>
+<td>Trainer Aircraft</td>
+</tr>
+</table>
+
+<h2>Select Audio Language</h2>
+
+<button onclick="playAudio('en')">English</button>
+
+<button onclick="playAudio('si')">
+සිංහල
+</button>
+
+<button onclick="playAudio('ta')">
+தமிழ்
+</button>
+
+<audio id="en" src="../audio/chipmunk-en.mp3"></audio>
+<audio id="si" src="../audio/chipmunk-si.mp3"></audio>
+<audio id="ta" src="../audio/chipmunk-ta.mp3"></audio>
+
+</div>
+
+</div>
+
+<script>
+
+function playAudio(language){
+
+document.getElementById("en").pause();
+document.getElementById("si").pause();
+document.getElementById("ta").pause();
+
+document.getElementById(language).currentTime=0;
+document.getElementById(language).play();
+
+}
+
+</script>
+
+</body>
+</html>
